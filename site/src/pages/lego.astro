@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import sets from '../data/lego.json';
+
+type LegoSet = { set: string; name: string; theme: string; year: number; pieces: number; photo: string | null; notes?: string };
+const collection = (sets as LegoSet[]).sort((a, b) => b.year - a.year);
+const themes = [...new Set(collection.map((s) => s.theme))].sort();
+const totalPieces = collection.reduce((n, s) => n + s.pieces, 0);
+---
+<Base title="Lego" description="My Lego collection, with photos and notes.">
+  <h1>Lego collection</h1>
+  <p class="muted">{collection.length} sets · {totalPieces.toLocaleString('en-US')} pieces · {themes.length} themes</p>
+
+  <div class="filters" role="group" aria-label="Filter by theme">
+    <button data-theme="all" class="active">All</button>
+    {themes.map((t) => <button data-theme={t}>{t}</button>)}
+  </div>
+
+  <div class="grid">
+    {collection.map((s) => (
+      <div class="card set" data-theme={s.theme}>
+        {s.photo ? <img src={s.photo} alt={s.name} loading="lazy" /> : <div class="ph mono">#{s.set}</div>}
+        <h3>{s.name}</h3>
+        <p class="muted mono">#{s.set} · {s.year} · {s.pieces} pcs</p>
+        <span class="tag">{s.theme}</span>
+        {s.notes && <p>{s.notes}</p>}
+      </div>
+    ))}
+  </div>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  const cards = document.querySelectorAll<HTMLElement>('.set');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      buttons.forEach((x) => x.classList.toggle('active', x === b));
+      cards.forEach((c) => {
+        c.hidden = b.dataset.theme !== 'all' && c.dataset.theme !== b.dataset.theme;
+      });
+    }),
+  );
+</script>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.5rem; }
+  .filters button { background: var(--panel); color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: .3rem .9rem; cursor: pointer; }
+  .filters button.active { color: var(--text); border-color: var(--accent); }
+  .set img, .ph { border-radius: 8px; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .ph { background: var(--border); display: grid; place-items: center; color: var(--muted); }
+  .set h3 { margin: .75rem 0 .1rem; }
+</style>

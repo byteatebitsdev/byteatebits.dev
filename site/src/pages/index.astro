@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('homelab', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const sections = [
+  { href: '/portfolio/', title: 'Portfolio', text: 'Resume, skills and the projects behind them.' },
+  { href: '/homelab/', title: 'Homelab', text: 'NAS, Raspberry Pi and other things running at home.' },
+  { href: '/lego/', title: 'Lego', text: 'My collection, with photos and notes on each build.' },
+];
+const coming = [
+  { title: 'F1 dashboards', text: 'Live and historical Formula 1 data, charted.' },
+  { title: 'Lego news', text: 'New sets and LEGO Ideas, gathered daily.' },
+  { title: 'Price tracker', text: 'Lego prices across shops, with alerts for members.' },
+];
+---
+<Base title="Home">
+  <section class="hero">
+    <p class="mono muted">$ whoami</p>
+    <h1>Hi, I'm George. I build things with <span id="rotate" class="accent">cloud</span>.</h1>
+    <p class="lead muted">
+      This site is my portfolio and my AWS Solutions Architect lab: every page runs on infrastructure I
+      defined in code.
+    </p>
+  </section>
+
+  <section>
+    <h2>Explore</h2>
+    <div class="grid">
+      {sections.map((s) => (
+        <a class="card" href={s.href}>
+          <h3>{s.title}</h3>
+          <p class="muted">{s.text}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section>
+      <h2>Latest from the homelab</h2>
+      <ul class="posts">
+        {posts.map((p) => (
+          <li>
+            <a href={`/homelab/${p.id}/`}>{p.data.title}</a>
+            <span class="muted"> · {p.data.summary}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section>
+    <h2>Coming soon</h2>
+    <div class="grid">
+      {coming.map((c) => (
+        <div class="card">
+          <span class="tag soon">in progress</span>
+          <h3>{c.title}</h3>
+          <p class="muted">{c.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Small bit of motion for the hero: cycle through a few words.
+  const words = ['cloud', 'AWS', 'Raspberry Pis', 'Lego', 'F1 data'];
+  const el = document.getElementById('rotate');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (el && !reduce) {
+    let i = 0;
+    setInterval(() => {
+      i = (i + 1) % words.length;
+      el.classList.remove('show');
+      void el.offsetWidth;
+      el.textContent = words[i];
+      el.classList.add('show');
+    }, 2200);
+  }
+</script>
+
+<style>
+  .hero { padding: 3rem 0 2rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: .25rem 0 1rem; }
+  .lead { font-size: 1.15rem; max-width: 40rem; }
+  .accent { color: var(--accent); display: inline-block; }
+  :global(.show) { animation: pop .4s ease-out; }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  section { margin-top: 2.5rem; }
+  .posts { padding-left: 1.1rem; }
+  .card h3 { margin: .5rem 0 .25rem; }
+</style>

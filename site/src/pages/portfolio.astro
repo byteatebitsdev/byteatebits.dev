@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Replace these placeholders with your real details.
+const skills = ['AWS (studying for Solutions Architect)', 'Linux', 'Networking', 'Homelab and self-hosting'];
+const experience = [
+  { role: 'Your role', org: 'Company', dates: '20XX to now', text: 'One or two lines on what you did and the impact.' },
+];
+const certifications = [
+  { name: 'AWS Certified Solutions Architect - Associate', status: 'In progress' },
+];
+---
+<Base title="Portfolio" description="Resume, skills and projects.">
+  <h1>Portfolio</h1>
+  <p class="muted">A short intro about you: what you work on and what you're looking for.</p>
+  <p><a href="/resume/resume.pdf">Download my resume (PDF)</a></p>
+
+  <h2>Skills</h2>
+  <ul>{skills.map((s) => <li>{s}</li>)}</ul>
+
+  <h2>Experience</h2>
+  {experience.map((e) => (
+    <div class="card">
+      <h3>{e.role} <span class="muted">· {e.org}</span></h3>
+      <p class="muted mono">{e.dates}</p>
+      <p>{e.text}</p>
+    </div>
+  ))}
+
+  <h2>Certifications</h2>
+  <ul>{certifications.map((c) => <li>{c.name} <span class="tag">{c.status}</span></li>)}</ul>
+
+  <h2>Featured project</h2>
+  <a class="card" href="https://github.com/byteatebitsdev/byteatebits.dev">
+    <h3>byteatebits.dev</h3>
+    <p class="muted">This website: Astro on S3 and CloudFront, Route 53 DNS, deployed with AWS CDK and GitHub Actions.</p>
+  </a>
+</Base>
