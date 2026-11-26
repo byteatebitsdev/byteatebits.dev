@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Build site
+        working-directory: site
+        run: |
+          npm ci
+          npm run build
+
+      - name: Type-check and synthesize infrastructure
+        working-directory: infra
+        env:
+          CDK_DEFAULT_ACCOUNT: '123456789012' # placeholder; synth needs no AWS access
+        run: |
+          npm ci
+          npm run build
+          npx cdk synth --quiet

@@ -1,0 +1,34 @@
+---
+const links = [
+  { href: '/portfolio/', label: 'Portfolio' },
+  { href: '/homelab/', label: 'Homelab' },
+  { href: '/lego/', label: 'Lego' },
+  { href: '/f1/', label: 'F1', soon: true },
+];
+const path = Astro.url.pathname;
+---
+<header>
+  <nav>
+    <a class="brand mono" href="/">byte<span>ate</span>bits</a>
+    <ul>
+      {links.map((l) => (
+        <li>
+          <a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>
+            {l.label}{l.soon && <sup class="soon">soon</sup>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  header { border-bottom: 1px solid var(--border); background: rgba(11, 17, 32, .85); position: sticky; top: 0; backdrop-filter: blur(8px); z-index: 10; }
+  nav { max-width: var(--max); margin: 0 auto; padding: .9rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .brand { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+  .brand span { color: var(--accent); }
+  ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+  ul a { color: var(--muted); }
+  ul a[aria-current='page'], ul a:hover { color: var(--text); text-decoration: none; }
+  .soon { font-size: .6rem; color: var(--accent-2); margin-left: .15rem; }
+</style>

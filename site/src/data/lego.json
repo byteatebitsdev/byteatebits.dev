@@ -1,0 +1,11 @@
+[
+  {
+    "set": "00000",
+    "name": "Example set (replace me)",
+    "theme": "Technic",
+    "year": 2025,
+    "pieces": 1000,
+    "photo": null,
+    "notes": "Edit src/data/lego.json to list your real sets. Put photos in public/lego/."
+  }
+]

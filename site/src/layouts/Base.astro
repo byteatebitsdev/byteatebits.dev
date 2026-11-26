@@ -1,0 +1,35 @@
+---
+import Nav from '../components/Nav.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Portfolio, homelab, F1 and Lego projects by George.' } = Astro.props;
+const fullTitle = title === 'Home' ? 'byteatebits.dev' : `${title} | byteatebits.dev`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p class="muted">Built with Astro, hosted on AWS (S3 + CloudFront). <a href="https://github.com/byteatebitsdev/byteatebits.dev">Source on GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  footer { max-width: var(--max); margin: 0 auto; padding: 2rem 1.25rem; border-top: 1px solid var(--border); font-size: .875rem; }
+</style>

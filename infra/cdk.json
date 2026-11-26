@@ -1,0 +1,9 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "context": {
+    "domainName": "byteatebits.dev",
+    "githubRepo": "byteatebitsdev/byteatebits.dev",
+    "monthlyBudgetUsd": 15,
+    "@aws-cdk/core:defaultCrossStackReferences": "strong"
+  }
+}
